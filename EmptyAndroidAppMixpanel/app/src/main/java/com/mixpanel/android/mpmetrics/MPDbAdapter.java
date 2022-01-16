@@ -154,14 +154,7 @@ import android.util.Log;
             cv.put(KEY_CREATED_AT, System.currentTimeMillis());
             db.insert(tableName, null, cv);
 
-            String query = "";
-            if (tableName.equals(Table.EVENTS.getName())) {
-                query =  "SELECT COUNT(*) FROM " + Table.EVENTS;
-            } else {
-                query =  "SELECT COUNT(*) FROM " + Table.PEOPLE;
-            }
-
-            c = db.rawQuery(query, null);
+            c = db.rawQuery("SELECT COUNT(*) FROM " + tableName, null);
             c.moveToFirst();
             count = c.getInt(0);
         } catch (final SQLiteException e) {
@@ -254,28 +247,13 @@ import android.util.Log;
         String last_id = null;
         String queueCount = null;
         final String tableName = table.getName();
-        String query = "";
-        if (tableName.equals(Table.EVENTS.getName())) {
-            query =  "SELECT * FROM " + Table.EVENTS  +
-                    " ORDER BY " + KEY_CREATED_AT + " ASC LIMIT 50";
-        } else {
-            query =  "SELECT * FROM " + Table.PEOPLE +
-                        " ORDER BY " + KEY_CREATED_AT + " ASC LIMIT 50";
-        }
-
         final SQLiteDatabase db = mDb.getReadableDatabase();
 
         try {
-            c = db.rawQuery(query, null);
+            c = db.rawQuery("SELECT * FROM " + tableName  +
+                    " ORDER BY " + KEY_CREATED_AT + " ASC LIMIT 50", null);
 
-            String query2 = "";
-            if (tableName.equals(Table.EVENTS.getName())) {
-                query2 =  "SELECT COUNT(*) FROM " + Table.EVENTS;
-            } else {
-                query2 =  "SELECT COUNT(*) FROM " + Table.PEOPLE;
-            }
-
-            queueCountCursor = db.rawQuery(query2, null);
+            queueCountCursor = db.rawQuery("SELECT COUNT(*) FROM " + tableName, null);
             queueCountCursor.moveToFirst();
             queueCount = String.valueOf(queueCountCursor.getInt(0));
 
